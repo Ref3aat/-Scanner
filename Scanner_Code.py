@@ -1,64 +1,63 @@
-# Define classification sets
-keywords = {'int', 'float', 'return', 'if', 'else', 'for', 'while', 'do', 'break', 'continue', 'switch',
-            'case', 'default', 'char', 'double', 'long', 'short', 'void', 'static'}
 
-operators = {'+', '-', '*', '/', '%', '=', '>', '<', '!', '&', '|'}
+Keyword={ 'int' ,'float' ,'return' ,'if' ,'else' ,'for' ,'while' ,'do' ,'break' ,'continue' ,'switch',
+          'case' ,'default' ,'char' ,'double' ,'long' ,'short' ,'void' ,'static'       }
 
-special_characters = {';', '{', '}', '(', ')', '[', ']', '!', '&', '|'}  
+Operators={ '+' ,'-' ,'*' ,'/' ,'%' ,'=' ,'>' ,'<' ,'!' ,'&' ,'|' }
 
-whitespace = {' ', '\t', '\n'}
+Special_Characters={';' ,'{' ,'}' ,'(' ,')' ,'[' ,']' ,'!' ,'&' ,'|'}
 
-# Scanner function to process the code
-def scanner(code_input):
-    tokens = []
-    token_buffer = ""
+space={ " " ,"\t" ,"\n"}
 
-    for ch in code_input:
-        if ch in whitespace:
-            if token_buffer:
-                if token_buffer in keywords:
-                    tokens.append((token_buffer, "Keyword"))
-                elif token_buffer.isdigit():
-                    tokens.append((token_buffer, "Number"))
-                else:
-                    tokens.append((token_buffer, "Identifier"))
-                token_buffer = ""
-        elif ch in special_characters:
-            if token_buffer:
-                if token_buffer in keywords:
-                    tokens.append((token_buffer, "Keyword"))
-                elif token_buffer.isdigit():
-                    tokens.append((token_buffer, "Number"))
-                else:
-                    tokens.append((token_buffer, "Identifier"))
-                token_buffer = ""
-            tokens.append((ch, "Special Character"))
-        elif ch in operators:
-            if token_buffer:
-                if token_buffer in keywords:
-                    tokens.append((token_buffer, "Keyword"))
-                elif token_buffer.isdigit():
-                    tokens.append((token_buffer, "Number"))
-                else:
-                    tokens.append((token_buffer, "Identifier"))
-                token_buffer = ""
-            tokens.append((ch, "Operator"))
+def scanner(input_code):
+  result_tokens=[]
+  curr_token=""
+
+  for char in input_code:
+    if char in space:
+      if len(curr_token)>0:
+        if curr_token in Keyword:
+                    result_tokens.append((curr_token ,"Keyword"))
+        elif curr_token.isdigit():
+            result_tokens.append((curr_token ,"Number"))
         else:
-            token_buffer += ch
-
-    # Handle any remaining tokens
-    if token_buffer:
-        if token_buffer in keywords:
-            tokens.append((token_buffer, "Keyword"))
-        elif token_buffer.isdigit():
-            tokens.append((token_buffer, "Number"))
+            result_tokens.append((curr_token ,"Identifier"))
+        curr_token = ""
+    elif char in Special_Characters:
+      if len(curr_token)>0:
+        if curr_token in Keyword:
+            result_tokens.append((curr_token ,"Keyword"))
+        elif curr_token.isdigit():
+            result_tokens.append((curr_token ,"Number"))
         else:
-            tokens.append((token_buffer, "Identifier"))
+            result_tokens.append((curr_token ,"Identifier"))
+        curr_token = ""
+      result_tokens.append((char ,"Special Character"))
+    elif char in Operators:
+      if len(curr_token)>0:
+        if curr_token in Keyword:
+                    result_tokens.append((curr_token ,"Keyword"))
+        elif curr_token.isdigit():
+            result_tokens.append((curr_token ,"Number"))
+        else:
+            result_tokens.append((curr_token ,"Identifier"))
+        curr_token = ""
+      result_tokens.append((char ,"Operator"))
 
-    return tokens
+    else:
+      curr_token += char
 
-# Test the code
-user_code = input("Enter a code in C: ")
-token_output = scanner(user_code)
-for token, category in token_output:
-    print(f"{token}: {category}")
+  if curr_token:
+        if curr_token in Keyword:
+            result_tokens.append((curr_token ,"Keyword"))
+        elif curr_token.isdigit():
+            result_tokens.append((curr_token ,"Number"))
+        else:
+            result_tokens.append((curr_token ,"Identifier"))
+
+  return result_tokens
+
+
+input_code=input("Enter a code in C: ")
+output=scanner(input_code)
+for i,j in output:
+  print(f"{i}: {j}")
